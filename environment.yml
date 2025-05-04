@@ -3,6 +3,8 @@ dependencies:
   - python=3.13
   - jupyter
   - python-dotenv
+  - polars
   - pip
   - pip:
     - scrapegraphai
+    - trueskill
