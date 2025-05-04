@@ -1,0 +1,8 @@
+name: braacket-scraper
+dependencies:
+  - python=3.13
+  - jupyter
+  - python-dotenv
+  - pip
+  - pip:
+    - scrapegraphai
