@@ -2,9 +2,11 @@ name: braacket-scraper
 dependencies:
   - python=3.13
   - jupyter
+  - ipywidgets
   - python-dotenv
   - polars
   - pip
   - pip:
     - scrapegraphai
     - trueskill
+    - polars_ds
