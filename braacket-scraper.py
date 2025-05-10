@@ -181,7 +181,7 @@ if __name__ == "__main__":
     # Parse command-line arguments
     parser = argparse.ArgumentParser(description="Braacket Scraper")
     parser.add_argument("--league_name", type=str, default='nemelee', help="Name of the league to scrape")
-    parser.add_argument("--update", choices=["full", "new"], default='new', help="Update mode: 'new' updates all tournaments and matches, 'new' updates only new tournaments and matches")
+    parser.add_argument("--update", choices=["full", "new"], default='new', help="Update mode: 'full' updates all tournaments and matches, 'new' updates only new tournaments and matches")
     args = parser.parse_args()
 
     main(args)

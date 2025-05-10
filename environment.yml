@@ -1,4 +1,7 @@
 name: braacket-scraper
+channels:
+  - defaults
+  - conda-forge
 dependencies:
   - python=3.13
   - jupyter
@@ -7,6 +10,8 @@ dependencies:
   - polars
   - pyarrow
   - pandas
+  - gql
+  - requests-toolbelt
   - pip
   - pip:
     - trueskill
