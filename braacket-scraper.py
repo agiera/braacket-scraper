@@ -115,11 +115,10 @@ def scrape_stage_matches(league: str, tournament: dict, stage_url: str) -> list:
             'loser': loser_encounter.text.strip(),
             'winner_score': encounter.select('.tournament_encounter-score.winner')[0].text.strip(),
             'loser_score': encounter.select('.tournament_encounter-score.loser')[0].text.strip(),
-        }
-        data.update({
+        } | {
             f'tournament_{k}': v
             for k, v in tournament.items()
-        })
+        }
         matches.append(data)
     return matches
 
