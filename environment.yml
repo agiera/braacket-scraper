@@ -5,6 +5,8 @@ dependencies:
   - ipywidgets
   - python-dotenv
   - polars
+  - pyarrow
+  - pandas
   - pip
   - pip:
     - trueskill
