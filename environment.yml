@@ -16,3 +16,4 @@ dependencies:
   - pip:
     - trueskill
     - polars_ds
+    - google-auth-oauthlib
