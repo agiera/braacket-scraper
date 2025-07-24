@@ -11,8 +11,16 @@ match_schema_overrides = {
     'encounter_id': pl.Int64,
     'winner_score': pl.Int64,
     'loser_score': pl.Int64,
+    'tournament_url': pl.String,
     'tournament_date': pl.Date,
     'tournament_number_of_players': pl.Int64,
+    'winner_url': pl.String,
+    'loser_url': pl.String,
+    'winner': pl.String,
+    'loser': pl.String,
+    'tournament_name': pl.String,
+    'tournament_country': pl.String,
+    'tournament_region': pl.String,
 }
 
 
