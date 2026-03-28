@@ -5,6 +5,36 @@ import requests
 import polars as pl
 import re
 
+import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util import Retry
+
+
+def get_retry_session(retries=5, backoff_factor=1.0):
+    session = requests.Session()
+    
+    # Configure retry logic
+    retry_strategy = Retry(
+        total=retries,                  # Total number of retries
+        status_forcelist=[400, 429, 500, 502, 503, 504], # Status codes to retry on
+        backoff_factor=backoff_factor,  # Delay = {backoff_factor} * (2 ** ({number of retries} - 1))
+        allowed_methods=["GET"]         # Only retry on these methods (optional)
+    )
+    
+    # Mount the adapter to both HTTP and HTTPS
+    adapter = HTTPAdapter(max_retries=retry_strategy)
+    session.mount("https://", adapter)
+    session.mount("http://", adapter)
+    
+    return session
+
+
+def get_with_retries(url, retries=5, backoff_factor=1.0) -> requests.Response:
+    session = get_retry_session(retries, backoff_factor)
+    response = session.get(url)
+    response.raise_for_status()  # Raise an exception for HTTP errors
+    return response
+
 
 braacket_url = 'https://braacket.com'
 match_schema_overrides = {
@@ -29,7 +59,7 @@ def tournaments_url_from_league(league_name: str) -> str:
 
 
 def scrape_tournament_tags(tournaments_url):
-    response = requests.get(tournaments_url)
+    response = get_with_retries(tournaments_url)
     tournament_soup = BeautifulSoup(response.content, 'html.parser')
     num_pages = (
         tournament_soup
@@ -40,7 +70,7 @@ def scrape_tournament_tags(tournaments_url):
 
     for i in range(1, int(num_pages) + 1):
         tournaments_page_url = f'{tournaments_url}&page={i}'
-        response = requests.get(tournaments_page_url)
+        response = get_with_retries(tournaments_page_url)
         tournament_soup = BeautifulSoup(response.content, 'html.parser')
         tournament_tags = list(
             map(
@@ -69,7 +99,7 @@ def extract_tournament_data(tournament_tags):
 
 
 def scrape_stage_urls(match_url):
-    response = requests.get(match_url)
+    response = get_with_retries(match_url)
     match_soup = BeautifulSoup(response.content, 'html.parser')
     stage_urls = list(set(
         map(
@@ -81,7 +111,7 @@ def scrape_stage_urls(match_url):
 
 
 def scrape_player_url(league_name: str, player_url: str) -> str:
-    response = requests.get(f'{braacket_url}/{player_url}')
+    response = get_with_retries(f'{braacket_url}/{player_url}')
     player_soup = BeautifulSoup(response.content, 'html.parser')
 
     search_term = rf"^/league/{league_name}/player/.*$"
@@ -96,7 +126,7 @@ def scrape_player_url(league_name: str, player_url: str) -> str:
 
 def scrape_stage_matches(league: str, tournament: dict, stage_url: str) -> list:
     matches = []
-    response = requests.get(f'{braacket_url}/{stage_url}')
+    response = get_with_retries(f'{braacket_url}/{stage_url}')
     stage_soup = BeautifulSoup(response.content, 'html.parser')
 
     player_url_dict = {}

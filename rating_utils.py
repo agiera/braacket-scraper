@@ -146,7 +146,7 @@ def calculate_ratings(
             matches
             .with_columns(
                 pl.struct(['winner_url', 'loser_url'])
-                    .map_elements(rate_players, return_dtype=pl.Struct)
+                    .map_elements(rate_players)
                     .alias('new_ratings')
             ).unnest('new_ratings')
         )

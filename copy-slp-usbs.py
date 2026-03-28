@@ -5,6 +5,12 @@ import shutil
 import argparse
 
 
+base_paths = [
+    "/run/media",  # Linux
+    "/Volumes", # macOS (typically /Volumes, but using /run/media for consistency)
+]
+
+
 def find_usb_devices():
     """Find mounted USB devices."""
     usb_devices = []
